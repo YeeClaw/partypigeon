@@ -1,0 +1,8 @@
+build/
+!partypigeon/
+
+*.o
+*.out
+*.exe
+partypigeon
+
