@@ -1,31 +1,45 @@
+# Compiler and flags
 CC = gcc
-CFLAGS = -Wall -Iinclude
-SRC = $(wildcard src/*.c)
-OBJ = $(SRC:src/%.c=build/%.o)
-DEP = $(SRC:src/%.c=build/%.d)
-TARGET = build/partypigeon
+CFLAGS = -Wall -Wextra -I./src/wing -I./include
 
-.PHONY: all clean
+# Paths
+LIB_SRC = src/wing
+CLIENT_SRC = src/partypigeon/client
+SERVER_SRC = src/partypigeon/server
+BUILD_DIR = build
 
-# Default target
-all: $(TARGET)
+# Output files
+LIB_OBJS = $(BUILD_DIR)/protocol.o
+CLIENT_OBJS = $(BUILD_DIR)/client_main.o
+SERVER_OBJS = $(BUILD_DIR)/server_main.o
 
-# Link the object files into the target executable
-$(TARGET): $(OBJ)
-	$(CC) -o $@ $^
+# Build targets
+all: client server
 
-# Compile each .c file to .o file in the build/ directory
-build/%.o: src/%.c
+# Build the library
+$(BUILD_DIR)/protocol.o: $(LIB_SRC)/protocol.c include/protocol.h | $(BUILD_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-# Generate dependency files (.d) for header file tracking
-build/%.d: src/%.c
-	$(CC) $(CFLAGS) -M $< > $@
+# Build the client app
+client: $(LIB_OBJS) $(CLIENT_OBJS) | $(BUILD_DIR)
+	$(CC) $^ -o $(BUILD_DIR)/client
 
-# Include the dependency files for automatic rebuilding
--include $(DEP)
+$(BUILD_DIR)/client_main.o: $(CLIENT_SRC)/main.c | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
 
-# Clean target: remove the build/ directory
+# Build the server app
+server: $(LIB_OBJS) $(SERVER_OBJS) | $(BUILD_DIR)
+	$(CC) $^ -o $(BUILD_DIR)/server
+
+$(BUILD_DIR)/server_main.o: $(SERVER_SRC)/main.c | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+# Ensure build directory exists
+$(BUILD_DIR):
+	mkdir -p $(BUILD_DIR)
+
+# Clean up
+.PHONY: clean
 clean:
-	rm -rf build/
+	rm -rf $(BUILD_DIR)
 
