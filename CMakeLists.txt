@@ -8,6 +8,9 @@ project(PartyPigeon C)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
+# Make this available to LSP
+set(CMAKE_EXPORT_COMPILE_COMMANDS on)
+
 # Add include directory
 include_directories(${CMAKE_SOURCE_DIR}/include)
 
