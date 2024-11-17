@@ -29,8 +29,6 @@ This project was built in C. An extensive list of all of the libraries that were
 
 ## Future Work
 
-{Make a list of things that you need to fix, improve, and add in the future.}
-
 - Add dynamic messaging
 - Add dynamic server addresses
 - Clean and make the code base more modular.
