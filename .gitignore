@@ -1,9 +1,7 @@
 build/
-!partypigeon/
 .cache/
 
 *.o
 *.out
 *.exe
-partypigeon
 
