@@ -24,6 +24,8 @@ void create_packet(WingPacket* packet, uint8_t type, const char* data, size_t le
 }
 
 int validate_packet(const WingPacket* packet) {
+	printf("%i\n", packet->checksum);
+	printf("%i\n", calculate_checksum(packet->payload, packet->length));
 	return packet->checksum == calculate_checksum(packet->payload, packet->length);
 }
 
@@ -82,7 +84,17 @@ int send_raw_packet(const char* source_ip, const char* dest_ip, WingPacket* wing
 	ip_header.check = calculate_checksum((char*)&ip_header, sizeof(ip_header));
 
 	// Send the complete packet (IP header + WingPacket)
-	ssize_t bytes_sent = sendto(socketfd, packet, packet_length, 0, NULL, 0);
+	struct sockaddr_in dest_addr; // We're going to be creating the destination address :)
+	memset(&dest_addr, 0, sizeof(dest_addr)); // Clear the structure
+    dest_addr.sin_family = AF_INET;
+    dest_addr.sin_port = 8080;
+
+	if (inet_pton(AF_INET, dest_ip, &dest_addr.sin_addr) <= 0) {
+		perror("inet_pton failed");
+		return 1;
+	}
+
+	ssize_t bytes_sent = sendto(socketfd, packet, packet_length, 0, (struct sockaddr*)&dest_addr, sizeof(dest_addr));
 	if (bytes_sent < 0) {
 		perror("Packet send failed");
 		return -1;

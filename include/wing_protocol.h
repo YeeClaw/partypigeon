@@ -18,6 +18,7 @@ uint16_t calculate_checksum(const char* data, size_t lenght);
 void create_packet(WingPacket *packet, uint8_t type, const char* data, size_t length);
 int validate_packet(const WingPacket* packet);
 char* process_message(const char* input);
+int send_raw_packet(const char* source_ip, const char* dest_ip, WingPacket* wing_pkt, int socketfd);
 
 #endif
 
