@@ -9,7 +9,7 @@ SERVER_SRC = src/partypigeon/server
 BUILD_DIR = build
 
 # Output files
-LIB_OBJS = $(BUILD_DIR)/protocol.o
+LIB_OBJS = $(BUILD_DIR)/wing_protocol.o
 CLIENT_OBJS = $(BUILD_DIR)/client_main.o
 SERVER_OBJS = $(BUILD_DIR)/server_main.o
 
@@ -17,7 +17,7 @@ SERVER_OBJS = $(BUILD_DIR)/server_main.o
 all: client server
 
 # Build the library
-$(BUILD_DIR)/protocol.o: $(LIB_SRC)/protocol.c include/protocol.h | $(BUILD_DIR)
+$(BUILD_DIR)/wing_protocol.o: $(LIB_SRC)/wing_protocol.c include/wing_protocol.h | $(BUILD_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 # Build the client app
